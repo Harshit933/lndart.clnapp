@@ -1,28 +1,28 @@
 import 'package:clnapp/model/app_model/app_utils.dart';
 
-class AppListPays {
-  List<AppPays> pays;
+class AppListSendPays {
+  List<AppSendPays> pays;
 
-  AppListPays({this.pays = const []});
+  AppListSendPays({this.pays = const []});
 
-  factory AppListPays.fromJSON(Map<String, dynamic> json,
+  factory AppListSendPays.fromJSON(Map<String, dynamic> json,
       {bool snackCase = false}) {
-    var pays = json.withKey("pays", snackCase: snackCase) as List;
+    var pays = json.withKey("payments", snackCase: snackCase) as List;
     if (pays.isNotEmpty) {
-      var appPays = pays
-          .map((pays) => AppPays.fromJSON(pays, snackCase: snackCase))
+      var appSendPays = pays
+          .map((pays) => AppSendPays.fromJSON(pays, snackCase: snackCase))
           .toList();
-      return AppListPays(pays: appPays);
+      return AppListSendPays(pays: appSendPays);
     } else {
-      return AppListPays();
+      return AppListSendPays();
     }
   }
 }
 
-class AppPays {
+class AppSendPays {
   final String bolt11;
 
-  final String preimage;
+  final String paymentPreimage;
 
   final String createdAt;
 
@@ -32,34 +32,44 @@ class AppPays {
 
   final String destination;
 
+  final String label;
+
   final String identifier;
 
-  AppPays(
+  final String amountSent;
+
+  AppSendPays(
       {required this.bolt11,
-      required this.preimage,
+      required this.paymentPreimage,
       required this.createdAt,
       required this.status,
       required this.destination,
       required this.paymentHash,
-      this.identifier = "listpays"});
+      required this.label,
+      required this.amountSent,
+      this.identifier = "listSendPays"});
 
-  factory AppPays.fromJSON(Map<String, dynamic> json,
+  factory AppSendPays.fromJSON(Map<String, dynamic> json,
       {bool snackCase = false}) {
     var bolt11 = json.withKey("bolt11", snackCase: snackCase);
-    var preimage =
+    var paymentPreimage =
         json.parseMsat(key: "preimage", snackCase: snackCase, isObject: false);
     var createdAt = json.withKey("created_at", snackCase: snackCase);
     var status = json.withKey("status", snackCase: snackCase);
     var paymentHash = json.withKey("payment_hash", snackCase: snackCase);
     var destination = json.withKey("destination", snackCase: snackCase);
+    var label = json.withKey("label", snackCase: snackCase);
+    var amountSent = json.withKey("amount_sent_msat", snackCase: snackCase);
 
     /// Checking if the status of the pay is complete or not
-    return AppPays(
+    return AppSendPays(
         bolt11: bolt11 ?? "No bolt11 for this transaction",
-        preimage: preimage,
+        paymentPreimage: paymentPreimage,
         createdAt: createdAt.toString(),
         status: status,
         paymentHash: paymentHash,
-        destination: destination ?? "No destination");
+        destination: destination ?? "No destination",
+        amountSent: amountSent,
+        label: label ?? "No label provided for the payment");
   }
 }

@@ -115,7 +115,7 @@ class _HomeViewState extends State<HomeView> {
   Future<List<dynamic>?> listPayments() async {
     final invoicesList =
         await widget.provider.get<AppApi>().listInvoices(status: "paid");
-    final paysList = await widget.provider.get<AppApi>().listPays();
+    final paysList = await widget.provider.get<AppApi>().listSendPays();
 
     List list = [];
 
@@ -146,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Bolt11: ${items[index].bolt11}"),
-              Text("preimage : ${items[index].preimage}"),
+              Text("Payment Preimage : ${items[index].paymentPreimage}"),
               Text("Created At: ${items[index].createdAt}"),
               Text("status: ${items[index].status}"),
               Text("payment Hash: ${items[index].paymentHash}"),
@@ -206,12 +206,13 @@ class _HomeViewState extends State<HomeView> {
                               child: Text(
                                 checkListIdentifier(
                                         listTile: snapshot.data![index])
-                                    ? snapshot.data![index].label
-                                    : snapshot.data![index].bolt11,
+                                    ? "Label of the invoice : ${snapshot.data![index].label}"
+                                    : "Amount Sent : ${snapshot.data![index].amountSent}",
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -300,7 +301,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         BottomNavyBarItem(
           icon: const Icon(Icons.settings_outlined),
-          title: const Text('Setting'),
+          title: const Text('Settings'),
           textAlign: TextAlign.center,
           activeColor: Theme.of(context).colorScheme.primary,
           inactiveColor: Theme.of(context).highlightColor,
