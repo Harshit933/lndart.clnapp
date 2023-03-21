@@ -1,3 +1,4 @@
+import 'package:cln_common/cln_common.dart';
 import 'package:clnapp/api/api.dart';
 import 'package:clnapp/components/buttons.dart';
 import 'package:clnapp/model/app_model/pay_invoice.dart';
@@ -82,7 +83,7 @@ class _PayViewState extends State<PayView> {
           MainCircleButton(
               icon: Icons.send_outlined,
               label: "Pay",
-              onPress: () {
+              onPress: () async {
                 if (boltString == null || boltString!.isEmpty) {
                   AppPayInvoice error = AppPayInvoice(payResponse: {
                     "Error": "Error: Bolt11/12 Invoice required"
@@ -91,17 +92,19 @@ class _PayViewState extends State<PayView> {
                     paymentResponse = error;
                   });
                 } else {
-                  payInvoice(boltString!, amountMsat).then((value) => {
+                  await payInvoice(boltString!, amountMsat).then((value) => {
                         setState(() {
                           paymentResponse = value;
+                          LogManager.getInstance.debug("IM HERE 1!");
                         }),
                       });
+                  LogManager.getInstance.debug("IM HERE 2!");
                 }
               }),
           paymentResponse != null
               ? paymentResponse!.payResponse["Error"] == null
                   ? Text(
-                      "Payment Successfully : ${paymentResponse!.payResponse["amountMsat"]["msat"]} msats")
+                      "Payment Successfully done! : ${paymentResponse!.payResponse["amount_msat"]}")
                   : Text("${paymentResponse!.payResponse["Error"]}")
               : Container(),
         ],
