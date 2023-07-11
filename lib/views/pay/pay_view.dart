@@ -9,6 +9,7 @@ import 'package:clnapp/model/app_model/pay_invoice.dart';
 import 'package:clnapp/utils/app_provider.dart';
 import 'package:clnapp/views/pay/numberpad_view.dart';
 import 'package:clnapp/views/pay/scanner_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -141,7 +142,7 @@ class _PayViewState extends State<PayView> {
       appBar: AppBar(
         elevation: 0,
         actions: [
-          Platform.isAndroid || Platform.isIOS
+          !kIsWeb && (Platform.isIOS || Platform.isAndroid)
               ? Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: IconButton(
